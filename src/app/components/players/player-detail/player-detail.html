@@ -1,1 +1,147 @@
-<p>player-detail works!</p>
+<div class="container mt-4">
+
+    <!-- spinner enquanto os dados ainda não chegaram da API -->
+    @if (loading()) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">A carregar...</span>
+        </div>
+        <p class="mt-2 text-muted">A carregar jogador...</p>
+    </div>
+
+    } @else if (player()) {
+
+    <!-- botão voltar no topo -->
+    <div class="mb-3">
+        <a routerLink="/players" class="btn btn-outline-secondary btn-sm">← Voltar à lista</a>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- ======= COLUNA ESQUERDA: foto e identidade ======= -->
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center">
+
+                <!-- foto do jogador -->
+                <img [src]="player()!.fotoUrl" [alt]="player()!.name" class="card-img-top p-4"
+                    style="height:250px; object-fit:contain;">
+
+                <div class="card-body">
+
+                    <!-- nome completo -->
+                    <h3 class="card-title mb-1">{{ player()!.name }}</h3>
+
+                    <!-- número da camisola -->
+                    <p class="text-muted mb-2">Camisola nº {{ player()!.number }}</p>
+
+                    <!-- badge titular ou suplente -->
+                    @if (player()!.isStartingXI) {
+                    <span class="badge bg-success fs-6">Titular Provável</span>
+                    } @else {
+                    <span class="badge bg-secondary fs-6">Suplente</span>
+                    }
+                </div>
+
+                <!-- botões de ação -->
+                <div class="card-footer d-flex gap-2">
+                    <a [routerLink]="['/players', player()!.id, 'edit']" class="btn btn-warning flex-fill">Editar</a>
+                    <!-- (click) é event binding — chama deletePlayer() ao clicar -->
+                    <button (click)="deletePlayer()" class="btn btn-danger flex-fill">Remover</button>
+                    <a routerLink="/players" class="btn btn-outline-secondary flex-fill">Voltar</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======= COLUNA DIREITA: dados detalhados ======= -->
+        <div class="col-md-8">
+
+            <!-- dados pessoais -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Dados Pessoais</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-sm-6 mb-2">
+                            <small class="text-muted d-block">Data de Nascimento</small>
+                            <!-- interpolação simples da data no formato da API: "1994-09-08" -->
+                            <strong>{{ player()!.birthDate }}</strong>
+                        </div>
+
+                        <div class="col-sm-6 mb-2">
+                            <small class="text-muted d-block">Idade</small>
+                            <!-- pipe | age: converte a data de nascimento na idade atual -->
+                            <strong>{{ player()!.birthDate | age }} anos</strong>
+                        </div>
+
+                        <div class="col-sm-6 mb-2">
+                            <small class="text-muted d-block">Posição</small>
+                            <strong>{{ player()!.position }}</strong>
+                        </div>
+
+                        <div class="col-sm-6 mb-2">
+                            <small class="text-muted d-block">Clube Atual</small>
+                            <strong>{{ player()!.club }}</strong>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- estatísticas pela seleção -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Estatísticas pela Seleção</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+
+                        <div class="col-6">
+                            <!-- fs-1: tamanho de fonte grande para destaque visual -->
+                            <p class="display-6 fw-bold text-success mb-0">{{ player()!.caps }}</p>
+                            <small class="text-muted">Internacionalizações</small>
+                        </div>
+
+                        <div class="col-6">
+                            <p class="display-6 fw-bold text-danger mb-0">{{ player()!.goals }}</p>
+                            <small class="text-muted">Golos</small>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- seleção nacional — só aparece quando team() já foi carregado -->
+            @if (team()) {
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Seleção Nacional</h5>
+                </div>
+                <div class="card-body d-flex align-items-center gap-3">
+
+                    <!-- bandeira da seleção -->
+                    <img [src]="team()!.flagUrl" [alt]="team()!.country" style="height:60px; object-fit:contain;">
+
+                    <div>
+                        <h5 class="mb-1">{{ team()!.country }}</h5>
+                        <p class="mb-0 text-muted">
+                            <span class="badge bg-secondary me-2">{{ team()!.confederation }}</span>
+                            Selecionador: <strong>{{ team()!.coach }}</strong>
+                        </p>
+                    </div>
+
+                    <!-- link para ver os detalhes da seleção -->
+                    <a [routerLink]="['/teams', team()!.id]" class="btn btn-outline-primary btn-sm ms-auto">Ver
+                        Seleção</a>
+
+                </div>
+            </div>
+            }
+
+        </div>
+    </div>
+
+    } <!-- fim @else if (player()) -->
+
+</div>

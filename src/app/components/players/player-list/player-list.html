@@ -1,12 +1,40 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Jogadores</h2>
-        <a routerLink="/players/new" class="btn btn-success">+ Novo Jogador</a>
+        <div class="d-flex gap-2">
+            <!-- botão de ordenação por golos — alterna entre desc, asc e sem ordenação -->
+            <!-- [class.btn-success] é class binding: aplica a classe se sortGoals === 'desc' -->
+            <!-- [class.btn-warning] aplica se sortGoals === 'asc' -->
+            <!-- [class.btn-outline-secondary] aplica se não há ordenação ativa -->
+            <button (click)="toggleSortGoals()" [class.btn-success]="sortGoals === 'desc'"
+                [class.btn-warning]="sortGoals === 'asc'" [class.btn-outline-secondary]="sortGoals === null"
+                class="btn btn-sm">
+                <!-- o ícone e o texto mudam consoante o estado da ordenação -->
+                @if (sortGoals === 'desc') {
+                Golos ↓
+                } @else if (sortGoals === 'asc') {
+                Golos ↑
+                } @else {
+                Ordenar por Golos
+                }
+            </button>
+            <button (click)="toggleSortGames()" [class.btn-success]="sortGames === 'desc'"
+                [class.btn-warning]="sortGames === 'asc'" [class.btn-outline-secondary]="sortGames === null" class="btn btn-sm">
+                @if (sortGames === 'desc') {
+                Jogos ↓
+                } @else if (sortGames === 'asc') {
+                Jogos ↑
+                } @else {
+                Ordenar por Jogos
+                }
+            </button>
+            <a routerLink="/players/new" class="btn btn-success">+ Novo Jogador</a>
+        </div>
     </div>
 
     <div class="row">
-        <!-- players() com () porque é um signal -->
-        @for (player of players(); track player.id) {
+        <!-- sortedPlayers em vez de players() — usa o getter que aplica a ordenação -->
+        @for (player of sortedPlayers; track player.id) {
         <div class="col-md-4 mb-3">
             <div class="card h-100">
                 <img [src]="player.fotoUrl" class="card-img-top p-3" style="height:150px; object-fit:contain"
@@ -14,7 +42,6 @@
                 <div class="card-body">
                     <h5 class="card-title">
                         {{ player.name }}
-                        <!-- @if é a nova diretiva do Angular 17+ para condições -->
                         @if (player.isStartingXI) {
                         <span class="badge bg-success ms-2">Titular</span>
                         } @else {
@@ -25,9 +52,15 @@
                         <small>Posição: {{ player.position }}</small><br>
                         <small>Número: {{ player.number }}</small><br>
                         <small>Clube: {{ player.club }}</small><br>
-                        <!-- pipe age: passa birthDate ao AgePipe que devolve a idade em anos -->
                         <small>Idade: {{ player.birthDate | age }} anos</small><br>
-                        <small>Golos: {{ player.goals }} | Jogos: {{ player.caps }}</small>
+                        <!-- destaque visual nos golos quando a ordenação está ativa -->
+                        <small [class.fw-bold]="sortGoals !== null" [class.text-success]="sortGoals !== null">
+                            Golos: {{ player.goals }}
+                        </small> |
+                        <small>Jogos: {{ player.caps }}</small>
+                        <small [classList]="sortGames !== null ? 'fw-bold text-primary' : ''">
+                            Jogos: {{ player.caps }}
+                        </small>
                     </p>
                 </div>
                 <div class="card-footer d-flex gap-2">

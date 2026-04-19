@@ -1,38 +1,45 @@
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Seleções</h2>
-        <!-- routerLink navega para o formulário de criação -->
-        <a routerLink="/teams/new" class="btn btn-success">+ Nova Seleção</a>
-    </div>
+<!-- Título + botão de criar nova seleção -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-success">🇵🇹 Seleções Nacionais</h2>
+    <a routerLink="/teams/new" class="btn btn-success btn-lg shadow">
+        <i class="bi bi-plus-circle"></i> Nova Seleção
+    </a>
+</div>
 
-    <div class="row">
-        <!-- @for é a nova diretiva do Angular 17+ para iterar listas -->
-        <!-- teams() com () porque é um signal - tem de ser chamado como função -->
-        <!-- track team.id diz ao Angular como identificar cada item para otimizar re-renders -->
-        @for (team of teams(); track team.id) {
-        <div class="col-md-4 mb-3">
-            <div class="card h-100">
-                <!-- property binding: [src] e [alt] ligam ao valor da variável -->
-                <img [src]="team.flagUrl" class="card-img-top p-3" style="height:150px; object-fit:contain"
-                    [alt]="team.country">
-                <div class="card-body">
-                    <h5 class="card-title">{{ team.country }}</h5>
-                    <p class="card-text">
-                        <small>Confederação: {{ team.confederation }}</small><br>
-                        <small>Selecionador: {{ team.coach }}</small><br>
-                        <small>Ranking da FIFA: {{ team.fifaRanking }}</small>
-                    </p>
-                </div>
-                <div class="card-footer d-flex gap-2">
-                    <!-- [routerLink] com array constrói a rota dinamicamente: /teams/1 -->
-                    <a [routerLink]="['/teams', team.id]" class="btn btn-primary btn-sm">Ver</a>
-                    <a [routerLink]="['/teams', team.id, 'edit']" class="btn btn-warning btn-sm">Editar</a>
-                    <!-- event binding: (click) chama o método ao clicar -->
-                    <!-- team.id! - o ! diz ao TypeScript que o id nunca é undefined aqui -->
-                    <button (click)="deleteTeam(team.id!)" class="btn btn-danger btn-sm">Remover</button>
-                </div>
+<!-- Lista de cards das seleções -->
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @for (team of teams(); track team.id) {
+    <div class="col">
+        <div class="card h-100 shadow-lg border-0 overflow-hidden">
+
+            <!-- Faixa verde no topo (confederação) -->
+            <div class="bg-success text-white text-center py-2 fw-bold">
+                {{ team.confederation }}
+            </div>
+
+            <div class="card-body text-center p-4">
+                <img [src]="team.flagUrl" class="img-fluid mb-3 rounded-3 shadow-sm" style="max-height: 120px;"
+                    alt="bandeira">
+                <h5 class="card-title fw-bold fs-4">{{ team.country }}</h5>
+                <p class="text-muted mb-1">{{ team.coach }}</p>
+                <span class="badge bg-dark fs-6">FIFA #{{ team.fifaRanking }}</span>
+            </div>
+
+            <!-- Rodapé com botões de ação -->
+            <div class="card-footer bg-light d-flex justify-content-between">
+                <a [routerLink]="['/teams', team.id]" class="btn btn-outline-success btn-sm">Ver detalhes</a>
+                <a [routerLink]="['/teams', team.id, 'edit']" class="btn btn-outline-warning btn-sm">Editar</a>
+                <button (click)="deleteTeam(team.id!)" class="btn btn-outline-danger btn-sm">🗑</button>
             </div>
         </div>
-        }
     </div>
+    }
 </div>
+
+<!-- Mensagem quando não existem seleções -->
+@if (teams().length === 0) {
+<div class="text-center py-5 text-muted">
+    <h4>Ainda não tens seleções criadas</h4>
+    <p>Clica em "Nova Seleção" para começar!</p>
+</div>
+}
