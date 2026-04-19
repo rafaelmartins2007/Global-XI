@@ -1,0 +1,102 @@
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <!-- título muda conforme é criação ou edição -->
+            <h4>{{ id ? 'Editar Jogador' : 'Novo Jogador' }}</h4>
+        </div>
+        <div class="card-body">
+
+            <div class="mb-3">
+                <label class="form-label">Nome</label>
+                <!-- [ngModel] lê o valor do signal, (ngModelChange) atualiza quando o utilizador escreve -->
+                <input type="text" class="form-control" [ngModel]="player().name"
+                    (ngModelChange)="player.update(p => ({...p, name: $event}))" name="name">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Posição</label>
+                <!-- select com as posições possíveis em campo -->
+                <select class="form-select" [ngModel]="player().position"
+                    (ngModelChange)="player.update(p => ({...p, position: $event}))" name="position">
+                    <option value="">Seleciona a posição</option>
+                    <option value="Goalkeeper">Guarda-redes</option>
+                    <option value="Defender">Defesa</option>
+                    <option value="Midfielder">Médio</option>
+                    <option value="Forward">Avançado</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Número da Camisola</label>
+                <input type="number" class="form-control" [ngModel]="player().number"
+                    (ngModelChange)="player.update(p => ({...p, number: $event}))" name="number">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Seleção</label>
+                <!-- select com as seleções disponíveis na API -->
+                <!-- teams() com () porque é um signal -->
+                <select class="form-select" [ngModel]="player().teamId"
+                    (ngModelChange)="player.update(p => ({...p, teamId: $event}))" name="teamId">
+                    <option value="">Seleciona a seleção</option>
+                    @for (team of teams(); track team.id) {
+                    <option [value]="team.id">{{ team.country }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Titular</label><br>
+                <!-- class binding - destaca o label conforme o valor -->
+                <div class="form-check form-switch">
+                    <input type="checkbox" class="form-check-input" [ngModel]="player().isStartingXI"
+                        (ngModelChange)="player.update(p => ({...p, isStartingXI: $event}))" name="isStartingXI">
+                    <!-- class binding: muda a cor do texto conforme é titular ou não -->
+                    <label class="form-check-label" [class.text-success]="player().isStartingXI"
+                        [class.text-secondary]="!player().isStartingXI">
+                        {{ player().isStartingXI ? 'Titular' : 'Suplente' }}
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">URL da Fotografia</label>
+                <input type="text" class="form-control" [ngModel]="player().fotoUrl"
+                    (ngModelChange)="player.update(p => ({...p, fotoUrl: $event}))" name="fotoUrl">
+                <!-- class binding esconde a imagem quando fotoUrl está vazio -->
+                <img [src]="player().fotoUrl" class="mt-2 rounded" style="height:100px; object-fit:contain"
+                    [class.d-none]="!player().fotoUrl">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Data de Nascimento</label>
+                <input type="date" class="form-control" [ngModel]="player().birthDate"
+                    (ngModelChange)="player.update(p => ({...p, birthDate: $event}))" name="birthDate">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Clube Atual</label>
+                <input type="text" class="form-control" [ngModel]="player().club"
+                    (ngModelChange)="player.update(p => ({...p, club: $event}))" name="club">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Jogos pela Seleção</label>
+                <input type="number" class="form-control" [ngModel]="player().caps"
+                    (ngModelChange)="player.update(p => ({...p, caps: $event}))" name="caps">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Golos pela Seleção</label>
+                <input type="number" class="form-control" [ngModel]="player().goals"
+                    (ngModelChange)="player.update(p => ({...p, goals: $event}))" name="goals">
+            </div>
+
+        </div>
+        <div class="card-footer d-flex gap-2">
+            <!-- event binding: chama onSubmit() ou onCancel() ao clicar -->
+            <button (click)="onSubmit()" class="btn btn-success">Guardar</button>
+            <button (click)="onCancel()" class="btn btn-secondary">Cancelar</button>
+        </div>
+    </div>
+</div>

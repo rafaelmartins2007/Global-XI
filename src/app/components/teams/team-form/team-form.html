@@ -1,0 +1,62 @@
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <!-- título muda conforme é criação ou edição -->
+            <h4>{{ id ? 'Editar Seleção' : 'Nova Seleção' }}</h4>
+        </div>
+        <div class="card-body">
+
+            <div class="mb-3">
+                <label class="form-label">País</label>
+                <!-- [ngModel] lê o valor do signal team().country para mostrar no input -->
+                <!-- (ngModelChange) atualiza o signal quando o utilizador escreve -->
+                <!-- .update() recebe o valor atual (t) e devolve um novo objeto com o campo alterado -->
+                <input type="text" class="form-control" [ngModel]="team().country"
+                    (ngModelChange)="team.update(t => ({...t, country: $event}))" name="country">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Confederação</label>
+                <!-- select com as confederações possíveis -->
+                <select class="form-select" [ngModel]="team().confederation"
+                    (ngModelChange)="team.update(t => ({...t, confederation: $event}))" name="confederation">
+                    <option value="">Seleciona a confederação</option>
+                    <option value="UEFA">UEFA</option>
+                    <option value="CONMEBOL">CONMEBOL</option>
+                    <option value="AFC">AFC</option>
+                    <option value="CAF">CAF</option>
+                    <option value="CONCACAF">CONCACAF</option>
+                    <option value="OFC">OFC</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Selecionador</label>
+                <input type="text" class="form-control" [ngModel]="team().coach"
+                    (ngModelChange)="team.update(t => ({...t, coach: $event}))" name="coach">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Ranking FIFA</label>
+                <input type="number" class="form-control" [ngModel]="team().fifaRanking"
+                    (ngModelChange)="team.update(t => ({...t, fifaRanking: $event}))" name="fifaRanking">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">URL da Bandeira</label>
+                <input type="text" class="form-control" [ngModel]="team().flagUrl"
+                    (ngModelChange)="team.update(t => ({...t, flagUrl: $event}))" name="flagUrl">
+                <!-- pré-visualização da bandeira - só aparece se o URL estiver preenchido -->
+                @if (team().flagUrl) {
+                <img [src]="team().flagUrl" class="mt-2" style="height:80px; object-fit:contain">
+                }
+            </div>
+
+        </div>
+        <div class="card-footer d-flex gap-2">
+            <!-- event binding: chama onSubmit() ou onCancel() ao clicar -->
+            <button (click)="onSubmit()" class="btn btn-success">Guardar</button>
+            <button (click)="onCancel()" class="btn btn-secondary">Cancelar</button>
+        </div>
+    </div>
+</div>

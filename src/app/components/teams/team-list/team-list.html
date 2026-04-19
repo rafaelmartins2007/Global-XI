@@ -1,0 +1,38 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Seleções</h2>
+        <!-- routerLink navega para o formulário de criação -->
+        <a routerLink="/teams/new" class="btn btn-success">+ Nova Seleção</a>
+    </div>
+
+    <div class="row">
+        <!-- @for é a nova diretiva do Angular 17+ para iterar listas -->
+        <!-- teams() com () porque é um signal - tem de ser chamado como função -->
+        <!-- track team.id diz ao Angular como identificar cada item para otimizar re-renders -->
+        @for (team of teams(); track team.id) {
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <!-- property binding: [src] e [alt] ligam ao valor da variável -->
+                <img [src]="team.flagUrl" class="card-img-top p-3" style="height:150px; object-fit:contain"
+                    [alt]="team.country">
+                <div class="card-body">
+                    <h5 class="card-title">{{ team.country }}</h5>
+                    <p class="card-text">
+                        <small>Confederação: {{ team.confederation }}</small><br>
+                        <small>Selecionador: {{ team.coach }}</small><br>
+                        <small>Ranking da FIFA: {{ team.fifaRanking }}</small>
+                    </p>
+                </div>
+                <div class="card-footer d-flex gap-2">
+                    <!-- [routerLink] com array constrói a rota dinamicamente: /teams/1 -->
+                    <a [routerLink]="['/teams', team.id]" class="btn btn-primary btn-sm">Ver</a>
+                    <a [routerLink]="['/teams', team.id, 'edit']" class="btn btn-warning btn-sm">Editar</a>
+                    <!-- event binding: (click) chama o método ao clicar -->
+                    <!-- team.id! - o ! diz ao TypeScript que o id nunca é undefined aqui -->
+                    <button (click)="deleteTeam(team.id!)" class="btn btn-danger btn-sm">Remover</button>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
