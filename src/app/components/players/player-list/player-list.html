@@ -1,75 +1,81 @@
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Jogadores</h2>
-        <div class="d-flex gap-2">
-            <!-- botão de ordenação por golos — alterna entre desc, asc e sem ordenação -->
-            <!-- [class.btn-success] é class binding: aplica a classe se sortGoals === 'desc' -->
-            <!-- [class.btn-warning] aplica se sortGoals === 'asc' -->
-            <!-- [class.btn-outline-secondary] aplica se não há ordenação ativa -->
-            <button (click)="toggleSortGoals()" [class.btn-success]="sortGoals === 'desc'"
-                [class.btn-warning]="sortGoals === 'asc'" [class.btn-outline-secondary]="sortGoals === null"
-                class="btn btn-sm">
-                <!-- o ícone e o texto mudam consoante o estado da ordenação -->
-                @if (sortGoals === 'desc') {
-                Golos ↓
-                } @else if (sortGoals === 'asc') {
-                Golos ↑
-                } @else {
-                Ordenar por Golos
-                }
-            </button>
-            <button (click)="toggleSortGames()" [class.btn-success]="sortGames === 'desc'"
-                [class.btn-warning]="sortGames === 'asc'" [class.btn-outline-secondary]="sortGames === null" class="btn btn-sm">
-                @if (sortGames === 'desc') {
-                Jogos ↓
-                } @else if (sortGames === 'asc') {
-                Jogos ↑
-                } @else {
-                Ordenar por Jogos
-                }
-            </button>
-            <a routerLink="/players/new" class="btn btn-success">+ Novo Jogador</a>
-        </div>
-    </div>
+<!-- Título + botões de ordenação + botão criar -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-primary">Jogadores</h2>
+    <div class="d-flex gap-2">
 
-    <div class="row">
-        <!-- sortedPlayers em vez de players() — usa o getter que aplica a ordenação -->
-        @for (player of sortedPlayers; track player.id) {
-        <div class="col-md-4 mb-3">
-            <div class="card h-100">
-                <img [src]="player.fotoUrl" class="card-img-top p-3" style="height:150px; object-fit:contain"
-                    [alt]="player.name">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        {{ player.name }}
-                        @if (player.isStartingXI) {
-                        <span class="badge bg-success ms-2">Titular</span>
-                        } @else {
-                        <span class="badge bg-secondary ms-2">Suplente</span>
-                        }
-                    </h5>
-                    <p class="card-text">
-                        <small>Posição: {{ player.position }}</small><br>
-                        <small>Número: {{ player.number }}</small><br>
-                        <small>Clube: {{ player.club }}</small><br>
-                        <small>Idade: {{ player.birthDate | age }} anos</small><br>
-                        <!-- destaque visual nos golos quando a ordenação está ativa -->
-                        <small [class.fw-bold]="sortGoals !== null" [class.text-success]="sortGoals !== null">
-                            Golos: {{ player.goals }}
-                        </small> |
-                        <small>Jogos: {{ player.caps }}</small>
-                        <small [classList]="sortGames !== null ? 'fw-bold text-primary' : ''">
-                            Jogos: {{ player.caps }}
-                        </small>
-                    </p>
-                </div>
-                <div class="card-footer d-flex gap-2">
-                    <a [routerLink]="['/players', player.id]" class="btn btn-primary btn-sm">Ver</a>
-                    <a [routerLink]="['/players', player.id, 'edit']" class="btn btn-warning btn-sm">Editar</a>
-                    <button (click)="deletePlayer(player.id!)" class="btn btn-danger btn-sm">Remover</button>
-                </div>
-            </div>
-        </div>
-        }
+        <!-- botão ordenar por golos - class binding muda a cor consoante o estado -->
+        <button (click)="toggleSortGoals()" [class.btn-success]="sortGoals === 'desc'"
+            [class.btn-warning]="sortGoals === 'asc'" [class.btn-outline-secondary]="sortGoals === null"
+            class="btn btn-sm">
+            @if (sortGoals === 'desc') { Golos ↓ }
+            @else if (sortGoals === 'asc') { Golos ↑ }
+            @else { Ordenar por Golos }
+        </button>
+
+        <!-- botão ordenar por jogos -->
+        <button (click)="toggleSortGames()" [class.btn-success]="sortGames === 'desc'"
+            [class.btn-warning]="sortGames === 'asc'" [class.btn-outline-secondary]="sortGames === null"
+            class="btn btn-sm">
+            @if (sortGames === 'desc') { Jogos ↓ }
+            @else if (sortGames === 'asc') { Jogos ↑ }
+            @else { Ordenar por Jogos }
+        </button>
+
+        <a routerLink="/players/new" class="btn btn-primary btn-lg shadow">+ Novo Jogador</a>
     </div>
 </div>
+
+<!-- Lista de cards dos jogadores - mesmo layout que team-list -->
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @for (player of sortedPlayers; track player.id) {
+    <div class="col">
+        <div class="card h-100 shadow-lg border-0 overflow-hidden">
+
+            <!-- faixa no topo com a posição - verde se titular, cinza se suplente -->
+            <div class="text-white text-center py-2 fw-bold" [class.bg-success]="player.isStartingXI"
+                [class.bg-secondary]="!player.isStartingXI">
+                {{ player.position }}
+                @if (player.isStartingXI) { · Titular } @else { · Suplente }
+            </div>
+
+            <div class="card-body text-center p-4">
+                <img [src]="player.fotoUrl" class="img-fluid mb-3 rounded-3 shadow-sm"
+                    style="max-height:120px; object-fit:contain;" [alt]="player.name">
+
+                <h5 class="card-title fw-bold fs-4">{{ player.name }}</h5>
+                <p class="text-muted mb-1">{{ player.club }}</p>
+                <span class="badge bg-dark fs-6">#{{ player.number }}</span>
+
+                <div class="mt-2">
+                    <small class="text-muted">Idade: {{ player.birthDate | age }} anos</small><br>
+
+                    <!-- destaque nos golos quando a ordenação está ativa -->
+                    <small [class.fw-bold]="sortGoals !== null" [class.text-success]="sortGoals !== null">
+                        {{ player.goals }} golos
+                    </small>
+                    ·
+                    <!-- destaque nos jogos quando a ordenação está ativa -->
+                    <small [class.fw-bold]="sortGames !== null" [class.text-primary]="sortGames !== null">
+                        {{ player.caps }} jogos
+                    </small>
+                </div>
+            </div>
+
+            <!-- rodapé com botões de ação -->
+            <div class="card-footer bg-light d-flex justify-content-between">
+                <a [routerLink]="['/players', player.id]" class="btn btn-outline-primary btn-sm">Ver detalhes</a>
+                <a [routerLink]="['/players', player.id, 'edit']" class="btn btn-outline-warning btn-sm">Editar</a>
+                <button (click)="deletePlayer(player.id!)" class="btn btn-outline-danger btn-sm">🗑</button>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+<!-- mensagem quando não há jogadores -->
+@if (players().length === 0) {
+<div class="text-center py-5 text-muted">
+    <h4>Ainda não tens jogadores criados</h4>
+    <p>Clica em "Novo Jogador" para começar!</p>
+</div>
+}
