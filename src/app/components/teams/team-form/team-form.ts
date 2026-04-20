@@ -29,7 +29,7 @@ export class TeamForm implements OnInit {
     private api: ApiService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // lê o parâmetro :id da URL atual
@@ -41,13 +41,11 @@ export class TeamForm implements OnInit {
         this.team.set(team); // .set() atualiza o signal e o HTML re-renderiza automaticamente
       });
     }
-    // se não existe id estamos em modo criação - o form começa vazio
   }
 
   onSubmit() {
     if (this.id) {
       // modo edição - PUT atualiza a seleção existente
-      // team() com () para obter o valor atual do signal
       this.api.updateTeam(this.id, this.team()).subscribe(() => {
         this.router.navigate(['/teams']); // volta à lista após guardar
       });

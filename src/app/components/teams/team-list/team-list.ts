@@ -10,8 +10,6 @@ import { Team } from '../../../models/team';
   styleUrl: './team-list.css',
 })
 export class TeamList implements OnInit {
-  // signal<Team[]>([]) - lista reativa de seleções, começa vazia
-  // quando .set() é chamado, o Angular atualiza o HTML automaticamente
   teams = signal<Team[]>([]);
 
   // ApiService é injetado para comunicar com a API

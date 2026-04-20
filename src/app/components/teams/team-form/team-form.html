@@ -8,9 +8,6 @@
 
             <div class="mb-3">
                 <label class="form-label">País</label>
-                <!-- [ngModel] lê o valor do signal team().country para mostrar no input -->
-                <!-- (ngModelChange) atualiza o signal quando o utilizador escreve -->
-                <!-- .update() recebe o valor atual (t) e devolve um novo objeto com o campo alterado -->
                 <input type="text" class="form-control" [ngModel]="team().country"
                     (ngModelChange)="team.update(t => ({...t, country: $event}))" name="country">
             </div>

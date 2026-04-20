@@ -1,11 +1,11 @@
 <!-- Título + botões de ordenação + botão criar -->
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold text-primary">Jogadores</h2>
+    <h2 class="fw-bold text-success">Jogadores</h2>
     <div class="d-flex gap-2">
 
-        <!-- botão ordenar por golos - class binding muda a cor consoante o estado -->
+        <!-- botão ordenar por golos -->
         <button (click)="toggleSortGoals()" [class.btn-success]="sortGoals === 'desc'"
-            [class.btn-warning]="sortGoals === 'asc'" [class.btn-outline-secondary]="sortGoals === null"
+            [class.btn-warning]="sortGoals === 'asc'" [class.btn-outline-success]="sortGoals === null"
             class="btn btn-sm">
             @if (sortGoals === 'desc') { Golos ↓ }
             @else if (sortGoals === 'asc') { Golos ↑ }
@@ -14,14 +14,14 @@
 
         <!-- botão ordenar por jogos -->
         <button (click)="toggleSortGames()" [class.btn-success]="sortGames === 'desc'"
-            [class.btn-warning]="sortGames === 'asc'" [class.btn-outline-secondary]="sortGames === null"
+            [class.btn-warning]="sortGames === 'asc'" [class.btn-outline-success]="sortGames === null"
             class="btn btn-sm">
             @if (sortGames === 'desc') { Jogos ↓ }
             @else if (sortGames === 'asc') { Jogos ↑ }
             @else { Ordenar por Jogos }
         </button>
 
-        <a routerLink="/players/new" class="btn btn-primary btn-lg shadow">+ Novo Jogador</a>
+        <a routerLink="/players/new" class="btn btn-success btn-sm">+ Adicionar Jogador</a>
     </div>
 </div>
 
